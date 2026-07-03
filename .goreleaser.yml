@@ -1,0 +1,31 @@
+version: 2
+project_name: java-deps
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - id: java-deps
+    main: ./cmd
+    binary: java-deps
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{ if index .Env "VERSION" }}{{ .Env.VERSION }}{{ else }}{{ .Version }}{{ end }}
+    flags:
+      - -trimpath
+archives:
+  - name_template: '{{ .ProjectName }}_{{ if index .Env "VERSION" }}{{ .Env.VERSION }}{{ else }}{{ .Version }}{{ end }}_{{ .Os }}_{{ .Arch }}{{ with .Arm }}v{{ . }}{{ end }}{{ with .Mips }}_{{ . }}{{ end }}{{ if not (eq .Amd64 "v1") }}{{ .Amd64 }}{{ end }}'
+    formats:
+      - zip
+checksum:
+  name_template: 'checksums.txt'
+changelog:
+  disable: true
+release:
+  disable: false

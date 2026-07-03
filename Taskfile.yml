@@ -1,0 +1,37 @@
+version: 3
+
+vars:
+  APP_NAME: java-deps
+
+tasks:
+  clean:
+    desc: Clean
+    cmds:
+      - rm -rf dist
+
+  build:
+    desc: Build
+    cmds:
+      - goreleaser build --clean --snapshot
+
+  test:
+    desc: Test
+    cmds:
+      - go mod tidy
+      - go test -v ./...
+
+  build-single:
+    desc: Build (single)
+    cmds:
+      - goreleaser build --clean --snapshot --single-target --output dist/{{ .APP_NAME }}
+
+  outdated:
+    desc: Show dependency updates
+    alias: [ dependencyUpdates ]
+    cmds:
+      - go mod tidy
+      - go list -u -m -json all | go-mod-outdated -update -direct
+
+  mingo:
+    cmds:
+      - mingo -tests -v
