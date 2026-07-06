@@ -8,7 +8,7 @@ require (
 	github.com/magiconair/properties v1.8.10
 	github.com/phsym/console-slog v0.3.1
 	github.com/rodaine/table v1.3.1
-	github.com/urfave/cli/v3 v3.10.0
+	github.com/urfave/cli/v3 v3.10.1
 )
 
 require (
