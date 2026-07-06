@@ -14,6 +14,7 @@ import (
 func doCompare(ctx context.Context, cmd *cli.Command) error {
 	inputFile := cmd.StringArg(inputFileArg.Name)
 	inputFile2 := cmd.StringArg(inputFile2Arg.Name)
+	hideUnchanged := cmd.Bool(hideUnchangedFlag.Name)
 
 	entries1, err := loadEntries(inputFile)
 	if err != nil {
@@ -52,7 +53,7 @@ func doCompare(ctx context.Context, cmd *cli.Command) error {
 
 	headerFmt := color.New(color.FgGreen, color.Underline).SprintfFunc()
 
-	// check for same dependencies
+	// check for unchanged dependencies
 	{
 		var matchingEntries []*ArtifactEntry
 		err = processor(func(index1 int, entry1 *ArtifactEntry, index2 int, entry2 *ArtifactEntry) (bool, error) {
@@ -68,7 +69,7 @@ func doCompare(ctx context.Context, cmd *cli.Command) error {
 			return err
 		}
 
-		if len(matchingEntries) > 0 {
+		if !hideUnchanged && (len(matchingEntries) > 0) {
 			fmt.Println()
 			fmt.Printf("Unchanged (%d)\n", len(matchingEntries))
 			tbl := table.New("Filename", "Group ID", "Artifact ID", "Version", "Classifier")

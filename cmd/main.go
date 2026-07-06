@@ -14,6 +14,12 @@ import (
 var (
 	version string
 
+	hideUnchangedFlag = &cli.BoolFlag{
+		Name:    "hide-unchanged",
+		Usage:   "hide unchanged",
+		Sources: cli.EnvVars("HIDE_UNCHANGED"),
+	}
+
 	inputFileArg = &cli.StringArg{
 		Name:      "input-file",
 		UsageText: "(input-file)",
@@ -49,6 +55,9 @@ var (
 				Name:   "compare",
 				Usage:  "compare",
 				Action: doCompare,
+				Flags: []cli.Flag{
+					hideUnchangedFlag,
+				},
 				Arguments: []cli.Argument{
 					inputFileArg,
 					inputFile2Arg,
